@@ -1,0 +1,35 @@
+Bookly Pro 4.0.1 — Dashboard and Widget Refinements
+
+What changed
+- Kept the dashboard greeting, name, date and live time clean, without the extra LOCAL TIME caption or home slogan.
+- Added a continuously animated smoky-light layer above the wallpaper. It remains active on the New Tab and is visible over custom background images.
+- Reduced the main widget panel's opaque fill to reveal more of a chosen wallpaper while retaining frosted glass blur and reflective highlights.
+- Kept the feed strictly as Trending News, limited to the first 10 current Google News RSS headlines. Headlines now expand naturally and the panel grows instead of clipping them into a tiny internal scroller. No “Explore more” footer is shown.
+- Removed the “A little space to plan...” subtitle and other unnecessary helper text.
+- Renamed the mini month widget to Google Calendar and added a shortcut that opens Google Calendar. The month grid is a local quick-view; it does not sync account events inside the extension.
+- Simplified the Calculator title and enabled keyboard input when the Calculator card has focus. Use its number/operator buttons, or type digits/operators; Enter or = calculates, Backspace deletes, and Escape clears.
+- Sports Radar now offers Football and Cricket only. When the feed has no events or cannot load, it shows a quiet animated placeholder instead of a verbose error paragraph.
+- Added Search by Image beside the microphone. It opens Google Lens in a new tab; choose an image in Lens to search visually.
+- Added a bottom-left AI speed dial. Click the sparkle button to reveal or hide ChatGPT, Gemini, Copilot, Kimi, DeepSeek and Qwen in a circular/radial arrangement.
+- Updated the extension manifest version to 4.0.1. The visible footer remains “Version 4.0” as requested.
+- Preserved the existing bookmark management, weather location, search, settings and optional shutdown helper files.
+
+Install/update
+1. Back up your existing Bookly Pro data from Settings before replacing files.
+2. Extract this ZIP.
+3. Open chrome://extensions and note the existing Bookly Pro Extension ID. Keep the extension directory/ID stable to preserve chrome.storage.local data.
+4. Replace the files in the existing extension folder with the extracted “Bookly Pro” folder contents.
+5. On chrome://extensions, click Reload on Bookly Pro, then open a new tab.
+6. Check that Trending News shows up to 10 full headlines, the smoke animation moves over the wallpaper, and the Google Calendar, Calculator, Sports Radar, Search by Image and AI speed dial controls work.
+
+Optional Windows Shutdown Timer
+- The previous optional “Shutdown Helper” folder is retained. If using this feature, follow the README inside that folder and test scheduling/cancellation before relying on it.
+- Save open work before scheduling shutdown. Windows or another process may still delay or block a shutdown.
+
+Important notes
+- News and scores require internet access. News is pulled from Google News RSS; Football and Cricket scores use ESPN's public scoreboard endpoints, which may occasionally be unavailable or have no events.
+- Search by Image opens Google Lens; the user chooses/uploads their image on Google's site.
+- Google Calendar shortcut opens the Google Calendar website. The embedded monthly grid is a quick-view and does not mirror private calendar events.
+- Smoke animation is CSS-based. On devices with “Reduce motion” enabled, animations are intentionally reduced.
+- Weather uses the selected location's coordinates and Open-Meteo data. Weather information cannot be guaranteed 100% accurate.
+- Voice typing requires supported browser speech recognition, microphone permission and often an internet connection.

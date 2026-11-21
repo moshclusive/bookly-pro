@@ -1,0 +1,4 @@
+Backup.json in this repo is DEMO data (12 generic public links).
+It shows the import/export format. Replace it with your own export
+from Bookly Pro Settings > Backup & Sync. Your real bookmarks are
+never shipped with this repository.

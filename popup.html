@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>New Tab</title>
+<link href="popup.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="container">
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<button aria-label="Return to home" class="back-home-btn" id="backHomeFromManagerBtn" title="Return to home" type="button"><svg fill="none" height="17" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="17"><path d="M19 12H5M12 19l-7-7 7-7"></path></svg></button>
+<div class="logo-section">
+<img alt="Bookly Pro" class="sidebar-logo" src="Assets/icon48.png"/>
+<h3>Bookly Pro</h3>
+</div>
+<button class="collapse-btn" id="collapseSidebarBtn" title="Collapse Sidebar">
+<svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20">
+<polyline points="11 17 6 12 11 7"></polyline>
+<polyline points="18 17 13 12 18 7"></polyline>
+</svg>
+</button>
+</div>
+<div class="sidebar-search">
+<input class="folder-search-input" id="folderSearchInput" placeholder="Search folders..." type="text"/>
+</div>
+<div class="folders-section">
+<div class="section-header">
+<span class="section-title">Folders</span>
+<button class="add-folder-btn" id="addFolderBtn" title="Add New Folder">
+<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16">
+<line x1="12" x2="12" y1="5" y2="19"></line>
+<line x1="5" x2="19" y1="12" y2="12"></line>
+</svg>
+</button>
+</div>
+<div class="folder-list" id="folderList"></div>
+</div>
+</aside>
+<!-- Sidebar Collapsed Flyout Trigger -->
+<button class="sidebar-flyout-trigger" id="sidebarFlyoutTrigger" title="Show Folders">
+<svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20">
+<line x1="3" x2="21" y1="12" y2="12"></line>
+<line x1="3" x2="21" y1="6" y2="6"></line>
+<line x1="3" x2="21" y1="18" y2="18"></line>
+</svg>
+</button>
+<!-- Sidebar Flyout Menu (shown when sidebar is collapsed) -->
+<div class="sidebar-flyout" id="sidebarFlyout">
+<div class="sidebar-flyout-header">
+<img alt="Bookly Pro" src="Assets/icon48.png"/>
+<h3>Folders</h3>
+</div>
+<div class="sidebar-flyout-search">
+<input id="flyoutSearchInput" placeholder="Search folders..." type="text">
+</input></div>
+<div class="sidebar-flyout-list" id="flyoutFolderList"></div>
+</div>
+<main class="content-panel" id="contentPanel">
+<header class="header">
+<div class="header-left">
+
+<button class="toggle-sidebar-btn hidden" id="toggleSidebarBtn" title="Toggle Sidebar">
+<svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20">
+<line x1="3" x2="21" y1="12" y2="12"></line>
+<line x1="3" x2="21" y1="6" y2="6"></line>
+<line x1="3" x2="21" y1="18" y2="18"></line>
+</svg>
+</button>
+</div>
+<div class="header-actions">
+<!-- Apps Launcher -->
+<div class="app-launcher-header-wrapper" id="appLauncherDockItem">
+<button aria-label="All Bookmarks" class="action-btn" id="appLauncherBtn" title="All Bookmarks">
+<svg fill="none" height="20" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24" width="20">
+<circle cx="6" cy="6" r="2"></circle>
+<circle cx="12" cy="6" r="2"></circle>
+<circle cx="18" cy="6" r="2"></circle>
+<circle cx="6" cy="12" r="2"></circle>
+<circle cx="12" cy="12" r="2"></circle>
+<circle cx="18" cy="12" r="2"></circle>
+<circle cx="6" cy="18" r="2"></circle>
+<circle cx="12" cy="18" r="2"></circle>
+<circle cx="18" cy="18" r="2"></circle>
+</svg>
+</button>
+<div class="app-launcher-popup hidden" id="appLauncherPopup">
+<div class="launcher-search-wrap">
+<svg aria-hidden="true" fill="none" height="17" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="17"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+<input aria-label="Search apps" autocomplete="off" id="launcherSearchInput" placeholder="Search apps..." type="search"/>
+</div>
+<div class="launcher-tabs" id="launcherTabs">
+<button class="launcher-tab active" data-provider="google">
+<svg height="12" viewbox="0 0 24 24" width="12"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.76h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"></path><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path></svg>
+                  Google
+                </button>
+<button class="launcher-tab" data-provider="microsoft">
+<svg height="12" viewbox="0 0 24 24" width="12"><rect fill="#F25022" height="10" width="10" x="1" y="1"></rect><rect fill="#7FBA00" height="10" width="10" x="13" y="1"></rect><rect fill="#00A4EF" height="10" width="10" x="1" y="13"></rect><rect fill="#FFB900" height="10" width="10" x="13" y="13"></rect></svg>
+                  Microsoft
+                </button>
+<button class="launcher-tab" data-provider="meta">
+<svg height="12" viewbox="0 0 24 24" width="12"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12c0-5.523-4.477-10-10-10z" fill="#0668E1"></path></svg>
+                  Meta
+                </button>
+<button class="launcher-tab" data-provider="custom">
+<svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="12"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                  Custom
+                </button>
+</div>
+<div class="launcher-grid" id="launcherGrid"></div>
+<div class="launcher-footer">
+<button class="launcher-manage-btn" id="launcherManageBtn">
+<svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="12"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-2.82 1.18V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1.08-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0-.33-2.82H3a2 2 0 0 1 0-4h.09c.7-.05 1.29-.5 1.51-1.08a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06c.5.5 1.2.67 1.82.33H9c.55-.3.92-.88 1-1.51V3a2 2 0 0 1 4 0v.09c.08.63.45 1.21 1 1.51.62.34 1.32.17 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06c-.5.5-.67 1.2-.33 1.82V9c.3.55.88.92 1.51 1H21a2 2 0 0 1 0 4h-.09c-.63.08-1.21.45-1.51 1z"></path></svg>
+                  Manage Apps
+                </button>
+</div>
+</div>
+</div>
+<div aria-hidden="true" class="header-spacer"></div>
+<button class="action-btn settings-btn" id="settingsBtn" title="Settings">
+<img alt="Settings" class="settings-icon" id="settingsIcon" src="Assets/settings-dark.png"/>
+</button>
+</div>
+</header>
+<!-- Clean Glassfrost New Tab dashboard -->
+<section aria-label="Bookly home" class="home-dashboard" id="homeDashboard">
+<div aria-hidden="true" class="home-wallpaper" id="homeWallpaperBg"><video autoplay="" class="home-wallpaper-video" id="homeWallpaperVideo" loop="" muted="" playsinline="" preload="auto"></video></div>
+<div aria-hidden="true" class="bookly-smoke-layer"><span class="smoke-ribbon smoke-ribbon-a"></span><span class="smoke-ribbon smoke-ribbon-b"></span><span class="smoke-ribbon smoke-ribbon-c"></span><span class="smoke-ribbon smoke-ribbon-d"></span><span class="smoke-ribbon smoke-ribbon-e"></span></div>
+<div class="home-dashboard-inner">
+<div class="home-hero-layout">
+<section aria-label="Welcome" class="home-welcome">
+<!-- Display name removed -->
+<p class="home-date" id="homeDate" style="display: none;"></p>
+
+<!-- Time & Date removed as requested -->
+<div class="home-time-hero" id="homeTimeHero" style="display: none !important;">
+  <span class="home-time-digits" id="homeTimeDigits"></span>
+  <span class="home-time-period" id="homeTimePeriod"></span>
+  <span class="home-greeting-chip" id="homeGreetingChip"></span>
+  <span class="home-calendar-chip" id="homeCalendarChip"></span>
+</div>
+
+<div class="command-hub" id="commandHub">
+  <!-- Creative Live Watch Directly Above Searchbar -->
+  <div class="bookly-live-watch" id="booklyLiveWatch" title="Live Watch">
+    <div class="live-watch-time">
+      <span class="watch-hours" id="watchHours">12</span><span class="watch-colon">:</span><span class="watch-minutes" id="watchMinutes">00</span><span class="watch-colon watch-sec-colon">:</span><span class="watch-seconds" id="watchSeconds">00</span>
+      <span class="watch-ampm" id="watchAmPm">PM</span>
+    </div>
+    <div class="live-watch-date" id="watchDate">Tuesday, November 3</div>
+  </div>
+
+  <div aria-label="Search tools" class="search-container home-search-tools" id="homeSearchTools">
+<div class="search-input-wrapper" id="bookmarkSearchWrapper">
+<button aria-expanded="false" aria-label="Open bookmark search" class="bookmark-search-toggle" id="bookmarkSearchToggle" title="Search bookmarks and tags (Ctrl+F)" type="button">
+<svg aria-hidden="true" fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16">
+<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+</svg>
+</button>
+<input aria-label="Search bookmarks and tags" autocomplete="off" id="searchInput" placeholder="Search the web…" type="text"/>
+</div>
+<div class="boolean-search-wrapper">
+<button aria-label="Bookmark search mode" class="bookmark-mode-indicator hidden" id="bookmarkModeIndicator" title="Bookmark search mode" type="button">
+<svg aria-hidden="true" fill="none" height="16" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24" width="16"><path d="M6 3.8A1.8 1.8 0 0 1 7.8 2h8.4A1.8 1.8 0 0 1 18 3.8V22l-6-4-6 4V3.8Z"></path></svg>
+</button>
+<input aria-label="Search on the internet" autocomplete="off" id="booleanSearchInput" placeholder="Search the web…" type="text"/>
+<button class="voice-search-btn" id="voiceSearchBtn" title="Voice Search">
+<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16">
+<path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+<path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+<line x1="12" x2="12" y1="19" y2="23"></line>
+<line x1="8" x2="16" y1="23" y2="23"></line>
+</svg>
+</button>
+<div class="search-engine-selector">
+<button class="search-engine-btn" id="selectedSearchEngineBtn" title="Select Search Engine">
+<img alt="Google" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%234285F4' d='M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.76h3.57c2.08-1.92 3.28-4.74 3.28-8.09z'/%3E%3Cpath fill='%2334A853' d='M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z'/%3E%3Cpath fill='%23FBBC05' d='M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z'/%3E%3Cpath fill='%23EA4335' d='M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z'/%3E%3C/svg%3E"/>
+</button>
+<div class="search-engine-dropdown hidden" id="searchEngineDropdownList">
+<button class="search-engine-option" data-engine="google"><svg class="se-icon-svg" viewbox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.76h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"></path><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path></svg><span>Google</span></button>
+<button class="search-engine-option" data-engine="yandex"><img alt="Yandex" class="se-icon-svg" src="Assets/yandex.png" style="border-radius:3px;"><span>Yandex</span></img></button>
+<button class="search-engine-option" data-engine="duckduckgo"><img alt="DuckDuckGo" class="se-icon-svg" src="Assets/duckduckgo.png" style="border-radius:3px;"><span>DuckDuckGo</span></img></button>
+<button class="search-engine-option" data-engine="bing"><svg class="se-icon-svg" viewbox="0 0 24 24"><path d="M5 3v16.5l4.67 2.5 7.33-4.17V12.5l-5.33-1.83L5 3zm4.67 5.17l2.66.83v4.17l-2.66 1.5V8.17z" fill="#008373"></path></svg><span>Bing</span></button>
+</div>
+</div>
+</div>
+</div>
+
+  
+  
+  <button aria-label="Show another quote" class="home-quote" id="homeQuoteWidget" type="button">
+    <span id="homeQuoteText">“We suffer more often in imagination than in reality.” — Seneca</span>
+  </button>
+
+<!-- Boolean Quick Filter Chips -->
+  <div class="boolean-quick-bar hidden" id="booleanQuickBar">
+    <span class="bool-label">Filters:</span>
+    <button type="button" class="bool-chip" data-token="AND">AND</button>
+    <button type="button" class="bool-chip" data-token="OR">OR</button>
+    <button type="button" class="bool-chip" data-token="NOT">NOT</button>
+    <button type="button" class="bool-chip" data-token="&quot;phrase&quot;">"exact phrase"</button>
+    <button type="button" class="bool-chip" data-token="site:">site:</button>
+    <button type="button" class="bool-chip" data-token="filetype:pdf">filetype:pdf</button>
+  </div>
+</div>
+
+</section>
+
+<!-- News widget removed as requested -->
+<aside aria-label="Live widgets" class="home-widget-stack hidden" id="homeWidgetStack" style="display: none !important;">
+</aside>
+</div>
+<div class="home-bottom-area">
+<div aria-label="Quick links dock" class="home-dock" id="homeDock">
+<div class="dock-all-apps-slot" id="dockAllAppsSlot"></div>
+<div aria-hidden="true" class="dock-divider"></div>
+<div aria-label="Quick links" class="dock-quicklinks" id="homeQuickLinks"></div>
+<button aria-label="Add quick link" class="dock-add-link" id="dockAddQuickLinkBtn" title="Add quick link" type="button"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M12 5v14M5 12h14"></path></svg></button>
+</div>
+</div>
+<footer aria-label="About Bookly Pro" class="home-credit-footer">
+<span>Bookly Pro</span><span aria-hidden="true" class="home-credit-separator">•</span>
+<a href="https://facebook.com/moshclusive" rel="noopener noreferrer" target="_blank">Developed by Moshiur</a>
+</footer>
+</div>
+</section>
+<!-- Combined Widget Bar with Tabs -->
+<div class="widget-bar" id="widgetBar">
+<div class="greeting-widget" id="greetingWidget">
+<span class="greeting-text" id="greetingText"></span>
+</div>
+<div class="widget-tabs" id="widgetTabs">
+<button class="widget-tab active" data-tab="quickAccess" id="tabQuickAccess">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<rect height="7" width="7" x="3" y="3"></rect>
+<rect height="7" width="7" x="14" y="3"></rect>
+<rect height="7" width="7" x="3" y="14"></rect>
+<rect height="7" width="7" x="14" y="14"></rect>
+</svg>
+<span>Quick Access</span>
+</button>
+<button class="widget-tab" data-tab="mostUsed" id="tabMostUsed">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+</svg>
+<span>Most Used</span>
+</button>
+<button class="widget-tab" data-tab="recentlyAdded" id="tabRecentlyAdded">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<circle cx="12" cy="12" r="10"></circle>
+<polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+<span>Recently Added</span>
+</button>
+</div>
+</div>
+<!-- Unified Tab Content Area -->
+<div class="widget-content-area" id="widgetContentArea">
+<!-- Quick Access Panel -->
+<div class="widget-panel active" id="quickAccessPanel">
+<div class="quick-access" id="quickAccess">
+<div class="quick-access-empty" id="quickAccessEmpty">
+<span>Drag any bookmark here to add to Quick Access</span>
+</div>
+</div>
+</div>
+<!-- Most Used Panel -->
+<div class="widget-panel" id="mostUsedPanel">
+<div class="most-used-list" id="mostUsedList"></div>
+</div>
+<!-- Recently Added Panel -->
+<div class="widget-panel" id="recentlyAddedPanel">
+<div class="recently-added-list" id="recentlyAddedList"></div>
+</div>
+</div>
+<div class="links-display-area" id="linksDisplayArea">
+<!-- Wallpaper (Content Only Mode) -->
+<div class="wallpaper-bg wallpaper-content-only" id="wallpaperBgContent"></div>
+<video aria-hidden="true" autoplay="" class="content-wallpaper-video" id="contentWallpaperVideo" loop="" muted="" playsinline="" preload="auto"></video>
+<div class="content-header">
+<div class="breadcrumb" id="breadcrumbContainer">
+<span class="breadcrumb-item clickable breadcrumb-home" id="breadcrumbHome">
+<svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="14">
+<path d="M3 9.5L12 3l9 6.5V20a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9.5z"></path>
+<path d="M9 22V12h6v10"></path>
+</svg>
+<span>Home</span>
+</span>
+<span class="breadcrumb-path" id="breadcrumbPath"></span>
+</div>
+<div class="folder-actions">
+<div class="view-style-group">
+<button class="folder-action-btn" id="viewModeBtn" title="Toggle View">
+<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16">
+<rect height="7" width="7" x="3" y="3"></rect>
+<rect height="7" width="7" x="14" y="3"></rect>
+<rect height="7" width="7" x="3" y="14"></rect>
+<rect height="7" width="7" x="14" y="14"></rect>
+</svg>
+</button>
+</div>
+<!-- Bulk Actions -->
+<div class="bulk-actions hidden" id="bulkActions">
+<span class="bulk-count" id="bulkCount">0 selected</span>
+<button class="bulk-btn" id="bulkFavoriteBtn" title="Favorite Selected"><svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></button>
+<button class="bulk-btn" id="bulkMoveBtn" title="Move Selected"><svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></button>
+<button class="bulk-btn bulk-btn-danger" id="bulkDeleteBtn" title="Delete Selected"><svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+<button class="bulk-btn" id="bulkCancelBtn" title="Cancel Selection"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-width="2.5" viewbox="0 0 24 24" width="14"><line x1="18" x2="6" y1="6" y2="18"></line><line x1="6" x2="18" y1="6" y2="18"></line></svg></button>
+</div>
+<button class="folder-action-btn" id="bulkSelectBtn" title="Bulk Select">
+<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16">
+<rect height="18" rx="2" ry="2" width="18" x="3" y="3"></rect>
+<path d="M9 12l2 2 4-4"></path>
+</svg>
+</button>
+<button class="folder-action-btn" id="checkBrokenLinksBtn" title="Broken Links Manager">
+<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16">
+<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+<path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+</svg>
+</button>
+<button class="folder-action-btn" id="sessionSnapshotBtn" title="Save Session">
+<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16">
+<rect height="14" rx="2" ry="2" width="20" x="2" y="3"></rect>
+<line x1="8" x2="16" y1="21" y2="21"></line>
+<line x1="12" x2="12" y1="17" y2="21"></line>
+</svg>
+</button>
+<button class="folder-action-btn" id="booleanShortcutsBtn" title="Boolean Search Shortcuts">
+<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16">
+<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+</svg>
+</button>
+<button class="folder-action-btn" id="sortBtn" title="Sort">
+<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16">
+<path d="M3 6h18M8 12h8M10 18h4"></path>
+</svg>
+</button>
+</div>
+</div>
+<div class="selected-links" id="selectedLinks"></div>
+<div class="links-container grid-view" id="linksContainer"></div>
+</div>
+<!-- Home Hover Folder Popup (outside stacking context for proper z-index) -->
+<div class="home-folder-popup" id="homeFolderPopup">
+<div class="home-folder-popup-header">
+<h4>
+<svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+        Folders
+      </h4>
+</div>
+<div class="home-folder-popup-list" id="homeFolderPopupList"></div>
+</div>
+<!-- Create Folder Modal -->
+<div class="modal-overlay hidden" id="createFolderModalOverlay">
+<div class="modal modal-small">
+<div class="modal-header">
+<h2 id="createFolderModalTitle">Create New Folder</h2>
+<button class="modal-close" id="closeCreateFolderModal">×</button>
+</div>
+<form autocomplete="off" id="createFolderForm">
+<input id="parentFolderPath" type="hidden" value=""/>
+<div class="form-group">
+<label for="newFolderName">Folder Name</label>
+<input id="newFolderName" placeholder="Enter folder name" required="" type="text"/>
+</div>
+<div class="form-group">
+<label>Folder Color</label>
+<div class="folder-color-picker" id="folderColorPicker">
+<button class="folder-color-option" data-color="" title="Default (Theme)" type="button">
+<svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" x2="19.07" y1="4.93" y2="19.07"></line></svg>
+</button>
+<button class="folder-color-option selected" data-color="#3b82f6" style="background:#3b82f6;" title="Blue" type="button"></button>
+<button class="folder-color-option" data-color="#10b981" style="background:#10b981;" title="Green" type="button"></button>
+<button class="folder-color-option" data-color="#f59e0b" style="background:#f59e0b;" title="Amber" type="button"></button>
+<button class="folder-color-option" data-color="#ef4444" style="background:#ef4444;" title="Red" type="button"></button>
+<button class="folder-color-option" data-color="#a855f7" style="background:#a855f7;" title="Purple" type="button"></button>
+<button class="folder-color-option" data-color="#06b6d4" style="background:#06b6d4;" title="Cyan" type="button"></button>
+<button class="folder-color-option" data-color="#ec4899" style="background:#ec4899;" title="Pink" type="button"></button>
+<button class="folder-color-option" data-color="#f97316" style="background:#f97316;" title="Orange" type="button"></button>
+<button class="folder-color-option" data-color="#14b8a6" style="background:#14b8a6;" title="Teal" type="button"></button>
+</div>
+</div>
+<div class="modal-actions">
+<button class="btn-secondary" id="cancelCreateFolderBtn" type="button">Cancel</button>
+<button class="btn-primary" type="submit">Create Folder</button>
+</div>
+</form>
+</div>
+</div>
+<!-- Edit Folder Modal -->
+<div class="modal-overlay hidden" id="editFolderModalOverlay">
+<div class="modal modal-small">
+<div class="modal-header">
+<h2>Edit Folder</h2>
+<button class="modal-close" id="closeEditFolderModal">×</button>
+</div>
+<form autocomplete="off" id="editFolderForm">
+<input id="editFolderPath" type="hidden" value=""/>
+<div class="form-group">
+<label>Folder Color</label>
+<div class="folder-color-picker" id="editFolderColorPicker">
+<button class="folder-color-option" data-color="" title="Default (Theme)" type="button">
+<svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" x2="19.07" y1="4.93" y2="19.07"></line></svg>
+</button>
+<button class="folder-color-option" data-color="#3b82f6" style="background:#3b82f6;" title="Blue" type="button"></button>
+<button class="folder-color-option" data-color="#10b981" style="background:#10b981;" title="Green" type="button"></button>
+<button class="folder-color-option" data-color="#f59e0b" style="background:#f59e0b;" title="Amber" type="button"></button>
+<button class="folder-color-option" data-color="#ef4444" style="background:#ef4444;" title="Red" type="button"></button>
+<button class="folder-color-option" data-color="#a855f7" style="background:#a855f7;" title="Purple" type="button"></button>
+<button class="folder-color-option" data-color="#06b6d4" style="background:#06b6d4;" title="Cyan" type="button"></button>
+<button class="folder-color-option" data-color="#ec4899" style="background:#ec4899;" title="Pink" type="button"></button>
+<button class="folder-color-option" data-color="#f97316" style="background:#f97316;" title="Orange" type="button"></button>
+<button class="folder-color-option" data-color="#14b8a6" style="background:#14b8a6;" title="Teal" type="button"></button>
+</div>
+</div>
+<div class="modal-actions">
+<button class="btn-secondary" id="cancelEditFolderBtn" type="button">Cancel</button>
+<button class="btn-primary" type="submit">Save Changes</button>
+</div>
+</form>
+</div>
+</div>
+<!-- Duplicate Link Found Modal -->
+<div class="modal-overlay hidden" id="duplicateLinkModalOverlay">
+<div class="modal modal-small">
+<div class="modal-header">
+<h2>Duplicate Link Found</h2>
+<button class="modal-close" id="closeDuplicateModal">×</button>
+</div>
+<div class="duplicate-link-info" id="duplicateLinkInfo">
+<p class="duplicate-warning-text">This link already exists in another folder:</p>
+<div class="duplicate-existing-info" id="duplicateExistingInfo"></div>
+</div>
+<div class="modal-actions">
+<button class="btn-secondary" id="duplicateKeepBothBtn" type="button">Keep Both</button>
+<button class="btn-primary" id="duplicateMoveBtn" type="button">Move Here</button>
+<button class="bulk-btn-danger btn-secondary" id="duplicateDeleteOldBtn" type="button">Delete Old</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Bookmark Context Menu -->
+<div class="context-menu hidden" id="bookmarkContextMenu">
+<button class="context-menu-item" data-action="open">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+<polyline points="15 3 21 3 21 9"></polyline>
+<line x1="10" x2="21" y1="14" y2="3"></line>
+</svg>
+      Open
+    </button>
+<button class="context-menu-item" data-action="open-new-tab">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4"></path>
+<polyline points="15 3 21 3 21 9"></polyline>
+<line x1="10" x2="21" y1="14" y2="3"></line>
+</svg>
+      Open in New Tab
+    </button>
+<div class="context-menu-divider"></div>
+<button class="context-menu-item" data-action="edit">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+<path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+</svg>
+      Edit
+    </button>
+<button class="context-menu-item" data-action="change-favicon">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<rect height="18" rx="2" ry="2" width="18" x="3" y="3"></rect>
+<circle cx="8.5" cy="8.5" r="1.5"></circle>
+<polyline points="21 15 16 10 5 21"></polyline>
+</svg>
+      Change Favicon
+    </button>
+<button class="context-menu-item" data-action="favorite">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+</svg>
+<span id="favoriteText">Add to Favorites</span>
+</button>
+<button class="context-menu-item" data-action="pin">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<path d="M12 2v8l4 2v2H8v-2l4-2V2z"></path>
+<line x1="7" x2="17" y1="22" y2="22"></line>
+<line x1="10" x2="10" y1="18" y2="22"></line>
+<line x1="14" x2="14" y1="18" y2="22"></line>
+</svg>
+<span id="pinText">Pin Item</span>
+</button>
+<button class="context-menu-item" data-action="copy-link">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect>
+<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+</svg>
+      Copy Link
+    </button>
+<div class="context-menu-divider"></div>
+<button class="context-menu-item context-menu-danger" data-action="delete">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<polyline points="3 6 5 6 21 6"></polyline>
+<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+</svg>
+      Delete
+    </button>
+</div>
+<!-- Folder Context Menu -->
+<div class="context-menu hidden" id="folderContextMenu">
+<button class="context-menu-item" data-action="open-all">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+<polyline points="15 3 21 3 21 9"></polyline>
+<line x1="10" x2="21" y1="14" y2="3"></line>
+</svg>
+      Open All
+    </button>
+<button class="context-menu-item" data-action="open-favorite">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+</svg>
+      Open Favourite
+    </button>
+<div class="context-menu-divider"></div>
+<button class="context-menu-item" data-action="edit-folder">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<circle cx="12" cy="12" r="3"></circle>
+<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+</svg>
+      Edit Folder
+    </button>
+<div class="context-menu-divider"></div>
+<button class="context-menu-item" data-action="rename-folder">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+<path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+</svg>
+      Rename
+    </button>
+<button class="context-menu-item" data-action="change-folder-icon">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<circle cx="12" cy="12" r="10"></circle>
+<path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+<line x1="9" x2="9.01" y1="9" y2="9"></line>
+<line x1="15" x2="15.01" y1="9" y2="9"></line>
+</svg>
+      Change Icon
+    </button>
+<button class="context-menu-item" data-action="add-to-folder">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+<line x1="12" x2="12" y1="11" y2="17"></line>
+<line x1="9" x2="15" y1="14" y2="14"></line>
+</svg>
+      Add Bookmark Here
+    </button>
+<button class="context-menu-item" data-action="add-subfolder">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+<line x1="12" x2="12" y1="12" y2="18"></line>
+<line x1="9" x2="15" y1="15" y2="15"></line>
+</svg>
+      Add Subfolder
+    </button>
+<button class="context-menu-item" data-action="move-to-root">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<path d="M3 12h13"></path>
+<path d="M16 6l-4 6 4 6"></path>
+<path d="M21 3v18"></path>
+</svg>
+      Move to Root
+    </button>
+<button class="context-menu-item" data-action="pin-folder">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<path d="M12 2v8l4 2v2H8v-2l4-2V2z"></path>
+<line x1="7" x2="17" y1="22" y2="22"></line>
+<line x1="10" x2="10" y1="18" y2="22"></line>
+<line x1="14" x2="14" y1="18" y2="22"></line>
+</svg>
+<span id="pinFolderText">Pin Folder</span>
+</button>
+<button class="context-menu-item" data-action="add-to-favorite-folder">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+</svg>
+      Folder Color
+    </button>
+<div class="context-menu-divider"></div>
+<button class="context-menu-item context-menu-danger" data-action="delete-folder">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<polyline points="3 6 5 6 21 6"></polyline>
+<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+</svg>
+      Delete Folder
+    </button>
+</div>
+<!-- Quick Access Context Menu -->
+<div class="context-menu hidden" id="quickAccessContextMenu">
+<button class="context-menu-item" data-action="open-quick">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+<polyline points="15 3 21 3 21 9"></polyline>
+<line x1="10" x2="21" y1="14" y2="3"></line>
+</svg>
+      Open
+    </button>
+<button class="context-menu-item" data-action="open-quick-new-tab">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4"></path>
+<polyline points="15 3 21 3 21 9"></polyline>
+<line x1="10" x2="21" y1="14" y2="3"></line>
+</svg>
+      Open in New Tab
+    </button>
+<div class="context-menu-divider"></div>
+<button class="context-menu-item" data-action="edit-quick">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+<path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+</svg>
+      Edit
+    </button>
+<button class="context-menu-item" data-action="change-quick-favicon">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<rect height="18" rx="2" ry="2" width="18" x="3" y="3"></rect>
+<circle cx="8.5" cy="8.5" r="1.5"></circle>
+<polyline points="21 15 16 10 5 21"></polyline>
+</svg>
+      Change Favicon
+    </button>
+<div class="context-menu-divider"></div>
+<button class="context-menu-item context-menu-danger" data-action="delete-quick">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<polyline points="3 6 5 6 21 6"></polyline>
+<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+</svg>
+      Delete
+    </button>
+</div>
+<!-- Color Picker Menu -->
+<div aria-label="Folder color picker" class="context-menu color-picker-window hidden" id="colorPickerMenu" role="dialog">
+<div class="color-picker-window-header">
+<div class="color-picker-title">Folder Color</div>
+<button aria-label="Close color picker" class="color-picker-window-close" id="closeFolderColorPickerBtn" title="Close color picker" type="button">×</button>
+</div>
+<div class="color-picker-grid" id="colorPickerGrid"></div>
+<div class="context-menu-divider"></div>
+<button class="context-menu-item context-menu-danger" data-action="remove-favorite-folder">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<polyline points="3 6 5 6 21 6"></polyline>
+<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+</svg>
+      Reset Folder Color
+    </button>
+</div>
+<!-- Add/Edit Bookmark Modal -->
+<div class="modal-overlay hidden" id="modalOverlay">
+<div class="modal">
+<div class="modal-header">
+<h2>Add / Edit Bookmark</h2>
+<button class="modal-close" id="closeModal">×</button>
+</div>
+<form autocomplete="off" id="linkForm">
+<input id="editIndex" type="hidden"/>
+<input id="editFolder" type="hidden"/>
+<div class="form-group">
+<label for="link">URL(s)</label>
+<input id="link" name="link" placeholder="Enter URL or multiple URLs separated by commas" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="title">Title(s)</label>
+<input id="title" name="title" placeholder="Enter title (optional)" type="text"/>
+</div>
+<div class="form-group">
+<label for="folder">Folder</label>
+<input id="folder" name="folder" placeholder="Select or create folder" required="" type="text"/>
+<ul class="suggestions-list" id="folderSuggestions"></ul>
+</div>
+<div class="form-group">
+<label for="keyword-input">Tags</label>
+<div class="tags-input-container">
+<input id="keyword-input" placeholder="Add tags..." type="text"/>
+<button class="tag-add-btn" id="add-keyword" type="button">Add</button>
+</div>
+<ul class="suggestions-list" id="keywordSuggestions"></ul>
+<div class="tags-list" id="keywords-list"></div>
+</div>
+<div class="form-group">
+<label for="bookmarkNotes">Notes</label>
+<textarea id="bookmarkNotes" name="bookmarkNotes" placeholder="Add notes about this bookmark..." rows="3"></textarea>
+</div>
+<div class="form-group">
+<label for="customFavicon">Custom Favicon (optional)</label>
+<div class="favicon-input-container">
+<input id="customFavicon" name="customFavicon" placeholder="Enter image URL (supports gif/png/jpg)" type="text"/>
+<button class="favicon-reset-btn" id="resetFavicon" type="button">Use Default</button>
+</div>
+<div class="favicon-preview hidden" id="faviconPreview">
+<img alt="Preview" id="faviconPreviewImg" src=""/>
+</div>
+</div>
+<div class="form-group">
+<label class="checkbox-label">
+<input id="favoriteCheckbox" name="favorite" type="checkbox"/>
+<span>Mark as Favorite</span>
+<svg class="favorite-star" fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16">
+<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+</svg>
+</label>
+</div>
+<div class="form-group">
+<label class="checkbox-label">
+<input id="pinCheckbox" name="pin" type="checkbox"/>
+<span>Pin Bookmark</span>
+<svg class="pin-icon" fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16">
+<path d="M12 2v8l4 2v2H8v-2l4-2V2z"></path>
+<line x1="7" x2="17" y1="22" y2="22"></line>
+<line x1="10" x2="10" y1="18" y2="22"></line>
+<line x1="14" x2="14" y1="18" y2="22"></line>
+</svg>
+</label>
+</div>
+<div class="form-group">
+<label class="checkbox-label">
+<input id="incognitoCheckbox" name="incognito" type="checkbox"/>
+<span>Incognito Bookmark (won't be exported)</span>
+<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16">
+<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+<circle cx="12" cy="12" r="3"></circle>
+<line stroke-width="2" x1="1" x2="23" y1="1" y2="23"></line>
+</svg>
+</label>
+</div>
+<div class="save-message" id="saveMessage"></div>
+<div class="modal-actions">
+<button class="btn-secondary" id="cancelBtn" type="button">Cancel</button>
+<button class="btn-primary" type="submit">Save Bookmark</button>
+</div>
+</form>
+</div>
+</div>
+<!-- Add Quick Access Modal -->
+<div class="modal-overlay hidden" id="addSiteModalOverlay">
+<div class="modal">
+<div class="modal-header">
+<h2 id="quickAccessModalTitle">Add Quick Access Site</h2>
+<button class="modal-close" id="closeAddSiteModal">×</button>
+</div>
+<form autocomplete="off" id="addSiteForm">
+<input id="editQuickAccessIndex" type="hidden"/>
+<div class="form-group">
+<label for="siteLink">Site URL</label>
+<input id="siteLink" name="siteLink" placeholder="https://example.com" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="siteTitle">Site Name</label>
+<input id="siteTitle" name="siteTitle" placeholder="Enter site name" type="text"/>
+</div>
+<div class="form-group">
+<label for="siteCustomFavicon">Custom Favicon (optional)</label>
+<div class="favicon-input-container">
+<input id="siteCustomFavicon" name="siteCustomFavicon" placeholder="Enter image URL (supports gif/png/jpg)" type="text"/>
+<button class="favicon-reset-btn" id="siteResetFavicon" type="button">Use Default</button>
+</div>
+<div class="favicon-preview hidden" id="siteFaviconPreview">
+<img alt="Preview" id="siteFaviconPreviewImg" src=""/>
+</div>
+</div>
+<div class="save-message" id="siteSaveMessage"></div>
+<div class="modal-actions">
+<button class="btn-secondary" id="cancelSiteBtn" type="button">Cancel</button>
+<button class="btn-primary" id="quickAccessSubmitBtn" type="submit">Add Site</button>
+</div>
+</form>
+</div>
+</div>
+<!-- Favicon Modal -->
+<div class="modal-overlay hidden" id="faviconModalOverlay">
+<div class="modal modal-small">
+<div class="modal-header">
+<h2>Change Favicon</h2>
+<button class="modal-close" id="closeFaviconModal">×</button>
+</div>
+<form autocomplete="off" id="faviconForm">
+<input id="faviconTargetType" type="hidden"/>
+<input id="faviconTargetFolder" type="hidden"/>
+<input id="faviconTargetIndex" type="hidden"/>
+<div class="form-group">
+<label for="newFaviconUrl">Favicon URL</label>
+<input id="newFaviconUrl" placeholder="Enter image URL (gif/png/jpg)" type="text"/>
+<small class="form-help">Leave empty to use default favicon</small>
+</div>
+<div class="favicon-preview hidden" id="newFaviconPreview">
+<img alt="Preview" id="newFaviconPreviewImg" src=""/>
+</div>
+<div class="modal-actions">
+<button class="btn-secondary" id="cancelFaviconBtn" type="button">Cancel</button>
+<button class="btn-primary" type="submit">Update Favicon</button>
+</div>
+</form>
+</div>
+</div>
+<!-- Session Snapshot Modal -->
+<div class="modal-overlay hidden" id="sessionSnapshotModalOverlay">
+<div class="modal modal-small">
+<div class="modal-header">
+<h2>Save Session</h2>
+<button class="modal-close" id="closeSessionSnapshotModal">×</button>
+</div>
+<form autocomplete="off" id="sessionSnapshotForm">
+<div class="form-group">
+<label for="sessionFolderName">Session Name</label>
+<input id="sessionFolderName" placeholder="e.g. Work Research, Morning Tabs..." required="" type="text"/>
+</div>
+<div class="session-tab-count" id="sessionTabCount"></div>
+<div class="session-tab-preview" id="sessionTabPreview"></div>
+<div class="modal-actions">
+<button class="btn-secondary" id="cancelSessionSnapshotBtn" type="button">Cancel</button>
+<button class="btn-primary" id="saveSessionBtn" type="submit">Save Session</button>
+</div>
+</form>
+</div>
+</div>
+<!-- Boolean Search Shortcuts Modal -->
+<div class="modal-overlay hidden" id="booleanShortcutsModalOverlay">
+<div class="modal">
+<div class="modal-header">
+<div class="bsh-modal-title">
+<svg fill="none" height="20" stroke="var(--primary-color)" stroke-width="2" viewbox="0 0 24 24" width="20">
+<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+</svg>
+<h2>Boolean Search Shortcuts</h2>
+</div>
+<button class="modal-close" id="closeBooleanShortcutsModal">×</button>
+</div>
+<!-- Add New Shortcut Form -->
+<div class="bsh-add-form">
+<div class="bsh-form-title">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><line x1="12" x2="12" y1="5" y2="19"></line><line x1="5" x2="19" y1="12" y2="12"></line></svg>
+<span>Add New Shortcut</span>
+</div>
+<div class="bsh-form-grid">
+<div class="bsh-field">
+<label class="bsh-label">Trigger</label>
+<input class="bsh-input bsh-input-trigger" id="bshNewTrigger" maxlength="5" placeholder="!" type="text"/>
+<span class="bsh-field-hint">Symbol or word</span>
+</div>
+<div class="bsh-field">
+<label class="bsh-label">Name</label>
+<input class="bsh-input" id="bshNewName" maxlength="30" placeholder="Stock Sites" type="text"/>
+<span class="bsh-field-hint">Shortcut label</span>
+</div>
+<div class="bsh-field bsh-field-sites">
+<label class="bsh-label">Sites <span class="bsh-label-sub">(comma separated)</span></label>
+<input class="bsh-input" id="bshNewSites" placeholder="stock.adobe.com, shutterstock.com, magnific.com" type="text"/>
+<span class="bsh-field-hint">Domains to search across</span>
+</div>
+</div>
+<div class="bsh-form-actions">
+<button class="btn-primary bsh-add-btn" id="bshAddBtn" type="button">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><line x1="12" x2="12" y1="5" y2="19"></line><line x1="5" x2="19" y1="12" y2="12"></line></svg>
+            Add Shortcut
+          </button>
+</div>
+</div>
+<!-- Shortcuts List -->
+<div class="bsh-list-header">
+<span class="bsh-list-title">Your Shortcuts</span>
+<span class="bsh-list-count" id="bshListCount">0</span>
+</div>
+<div class="bsh-list" id="bshList">
+<div class="bsh-empty" id="bshEmpty">
+<svg fill="none" height="28" stroke="var(--dark-text-muted)" stroke-width="1.5" viewbox="0 0 24 24" width="28">
+<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+</svg>
+<span>No shortcuts yet</span>
+</div>
+</div>
+<!-- Example hint -->
+<div class="bsh-example">
+<div class="bsh-example-row">
+<span class="bsh-example-trigger">!</span>
+<span class="bsh-example-arrow">→</span>
+<span class="bsh-example-sites">stock.adobe.com, shutterstock.com</span>
+</div>
+<div class="bsh-example-usage">
+          Type <code>!shoes banner</code> in search to boolean search across all mapped sites
+        </div>
+</div>
+</div>
+</div>
+<!-- Broken Links Auto Fix Modal -->
+<div class="modal-overlay hidden" id="brokenLinksModalOverlay">
+<div class="modal">
+<div class="modal-header">
+<h2>Broken Links Manager</h2>
+<button class="modal-close" id="closeBrokenLinksModal">×</button>
+</div>
+<div class="broken-links-header">
+<span class="broken-links-count" id="brokenLinksCount">0 broken links found</span>
+<button class="btn-primary btn-sm" id="recheckBrokenBtn">Re-check All</button>
+<button class="btn-secondary btn-sm" id="fixAllBrokenBtn">Update All URLs</button>
+</div>
+<div class="broken-links-list" id="brokenLinksList"></div>
+</div>
+</div>
+<!-- Folder Icon Picker Modal -->
+<div class="modal-overlay hidden" id="folderIconModalOverlay">
+<div class="modal modal-small">
+<div class="modal-header">
+<h2>Choose Folder Icon</h2>
+<button class="modal-close" id="closeFolderIconModal">×</button>
+</div>
+<div class="folder-icon-grid" id="folderIconGrid"></div>
+<div class="modal-actions" style="padding: 12px 20px;">
+<button class="btn-secondary" id="resetFolderIconBtn" type="button">Use Default</button>
+</div>
+</div>
+</div>
+<!-- Bulk Move Modal -->
+<div class="modal-overlay hidden" id="bulkMoveModalOverlay">
+<div class="modal modal-small">
+<div class="modal-header">
+<h2>Move Bookmarks To</h2>
+<button class="modal-close" id="closeBulkMoveModal">×</button>
+</div>
+<div class="bulk-move-folder-list" id="bulkMoveFolderList"></div>
+</div>
+</div>
+<!-- Duplicates Modal -->
+<div class="modal-overlay hidden" id="duplicatesModalOverlay">
+<div class="modal">
+<div class="modal-header">
+<h2>Duplicate Bookmarks</h2>
+<button class="modal-close" id="closeDuplicatesModal">×</button>
+</div>
+<div class="duplicates-content" id="duplicatesContent"></div>
+</div>
+</div>
+<!-- Settings Panel -->
+<div class="settings-panel hidden" id="settingsPanel">
+<div class="settings-header">
+<h2>Settings</h2>
+<button class="settings-close" id="closeSettingsPanel">×</button>
+</div>
+<div class="settings-content">
+<div class="settings-tabs">
+<button class="settings-tab active" data-tab="all-settings">
+<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16">
+<path d="M12 2v10l4 2"></path>
+<circle cx="12" cy="12" r="10"></circle>
+</svg>
+<span>General</span>
+</button>
+<button class="settings-tab" data-tab="theme-settings">
+<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16">
+<circle cx="12" cy="12" r="5"></circle>
+<line x1="12" x2="12" y1="1" y2="3"></line>
+<line x1="12" x2="12" y1="21" y2="23"></line>
+<line x1="4.22" x2="5.64" y1="4.22" y2="5.64"></line>
+<line x1="18.36" x2="19.78" y1="18.36" y2="19.78"></line>
+<line x1="1" x2="3" y1="12" y2="12"></line>
+<line x1="21" x2="23" y1="12" y2="12"></line>
+<line x1="4.22" x2="5.64" y1="19.78" y2="18.36"></line>
+<line x1="18.36" x2="19.78" y1="5.64" y2="4.22"></line>
+</svg>
+<span>Themes</span>
+</button>
+<button class="settings-tab" data-tab="backup-sync">
+<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16">
+<path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 0 1 9-9"></path>
+</svg>
+<span>Backup</span>
+</button>
+</div>
+<div class="settings-tab-content">
+<!-- General Settings Tab -->
+<div class="tab-pane active" id="all-settingsTab">
+<div class="settings-section">
+<h3>General</h3>
+<!-- Display name setting removed -->
+<div class="setting-item">
+<label class="switch-label">
+<span class="switch-text">Open links in same tab by default</span>
+<input checked="" class="switch-input" id="openSameTab" type="checkbox"/>
+<span class="switch-slider"></span>
+</label>
+</div>
+<div class="setting-item">
+<label class="switch-label">
+<span class="switch-text">Auto-redirect Facebook to Pinterest</span>
+<input class="switch-input" id="redirectToggle" type="checkbox"/>
+<span class="switch-slider"></span>
+</label>
+</div>
+<input class="switch-input" id="showFavoritesOnly" type="checkbox" hidden aria-hidden="true"/>
+<div class="setting-item">
+<label class="switch-label">
+<span class="switch-text">Confirm before deleting</span>
+<input checked="" class="switch-input" id="confirmDelete" type="checkbox"/>
+<span class="switch-slider"></span>
+</label>
+</div>
+<div class="setting-item">
+<label class="switch-label">
+<span class="switch-text">Show subfolder contents in parent folder</span>
+<input checked="" class="switch-input" id="showSubfolderContent" type="checkbox"/>
+<span class="switch-slider"></span>
+</label>
+</div>
+<div class="setting-item">
+<label class="switch-label">
+<span class="switch-text">Show visibility toggle (👁️) on folders</span>
+<input checked="" class="switch-input" id="showVisibilityToggle" type="checkbox"/>
+<span class="switch-slider"></span>
+</label>
+</div>
+</div>
+<div class="settings-section bookly-bookmark-bar-settings">
+<h3>Chrome Bookmarks Bar</h3>
+<p class="section-description">Choose one or more Bookly folders to publish under a dedicated folder in Chrome’s native bookmarks bar.</p>
+<div class="bookly-bookmark-bar-folder-choices" id="booklyBookmarkBarFolderChoices"><span class="muted">Loading folders…</span></div>
+<div class="home-quotes-editor-actions">
+<button class="btn-primary" id="saveBooklyBookmarkBarBtn" type="button">Update Bookmarks Bar</button>
+<button class="btn-secondary" id="clearBooklyBookmarkBarBtn" type="button">Remove Bookly Bar Folder</button>
+</div>
+<p class="section-description" id="booklyBookmarkBarStatus" role="status">Selected folders are copied into a separate Chrome Bookmarks Bar folder. Your existing bookmarks are not changed.</p>
+</div>
+<div class="settings-section home-quotes-settings">
+<h3>Greeting Quotes</h3>
+<label class="home-quotes-editor-label" for="customHomeQuotesInput">Your quotes</label>
+<textarea id="customHomeQuotesInput" placeholder="Make space for the work that matters.
+Small steps create strong systems." rows="4"></textarea>
+<div class="home-quotes-editor-actions">
+<button class="btn-primary" id="saveHomeQuotesBtn" type="button">Save quotes</button>
+<button class="btn-secondary" id="resetHomeQuotesBtn" type="button">Use built-in quotes</button>
+</div>
+</div>
+<div class="settings-section">
+<h3>Widgets</h3>
+<div class="setting-item">
+<label class="switch-label">
+<span class="switch-text">Show Greeting Message</span>
+<input checked="" class="switch-input" id="showGreetingToggle" type="checkbox"/>
+<span class="switch-slider"></span>
+</label>
+</div>
+</div>
+</div>
+<!-- Theme Settings Tab -->
+<div class="tab-pane" id="theme-settingsTab">
+<!-- Wallpaper Section -->
+<div class="settings-section">
+<h3>Wallpaper</h3>
+<!-- Wallpaper Mode Toggle -->
+<div class="setting-item">
+<label class="switch-label">
+<span class="switch-text">Enable Wallpaper</span>
+<input class="switch-input" id="wallpaperEnabled" type="checkbox"/>
+<span class="switch-slider"></span>
+</label>
+</div>
+<!-- Wallpaper Source Tabs -->
+<div class="wallpaper-source-tabs" id="wallpaperSourceTabs">
+<button class="wp-source-tab active" data-source="gallery"><svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="12"><rect height="18" rx="2" ry="2" width="18" x="3" y="3"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg> Gallery</button>
+<button class="wp-source-tab" data-source="colors"><svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="12"><circle cx="13.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="10.5" r="2.5"></circle><circle cx="8.5" cy="7.5" r="2.5"></circle><circle cx="6.5" cy="12.5" r="2.5"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.93 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.04-.23-.29-.38-.63-.38-1.03 0-.83.67-1.5 1.5-1.5H16c3.31 0 6-2.69 6-6 0-5.17-4.49-9-10-9z"></path></svg> Colors</button>
+<button class="wp-source-tab" data-source="url"><svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="12"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg> URL</button>
+<button class="wp-source-tab" data-source="upload"><svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="12"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" x2="12" y1="3" y2="15"></line></svg> Upload</button>
+</div>
+<!-- Gallery Panel -->
+<div class="wp-source-panel active" id="wpGalleryPanel">
+<div class="wp-gallery-grid" id="wpGalleryGrid"></div>
+</div>
+<!-- Solid Colors Panel -->
+<div class="wp-source-panel" id="wpColorsPanel">
+<div class="wp-colors-grid" id="wpColorsGrid"></div>
+</div>
+<!-- URL Panel -->
+<div class="wp-source-panel" id="wpUrlPanel">
+<div class="form-group" style="margin-bottom:8px;">
+<input id="wallpaperUrl" placeholder="Paste a direct image or MP4/WebM URL…" type="text"/>
+</div>
+<button class="btn-primary full-width" id="applyWpUrlBtn" style="font-size:11px;padding:7px;">Apply URL</button>
+</div>
+<!-- Upload Panel -->
+<div class="wp-source-panel" id="wpUploadPanel">
+<label class="wp-upload-area" id="wpUploadArea">
+<svg fill="none" height="24" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="24">
+<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+<polyline points="17 8 12 3 7 8"></polyline>
+<line x1="12" x2="12" y1="3" y2="15"></line>
+</svg>
+<span>Click or Drop an image or video here</span>
+<small>JPG, PNG, WebP (5MB max) · MP4, WebM, OGG (100MB max)</small>
+<input accept="image/*,video/mp4,video/webm,video/ogg" hidden="" id="wallpaperFileInput" type="file"/>
+</label>
+</div>
+<!-- Preview -->
+<div class="wp-preview-container hidden" id="wpPreviewContainer">
+<div class="wp-preview-header">
+<span>Preview</span>
+<button class="wp-remove-btn" id="wpRemoveBtn" title="Remove Wallpaper">
+<svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="12">
+<line x1="18" x2="6" y1="6" y2="18"></line>
+<line x1="6" x2="18" y1="6" y2="18"></line>
+</svg>
+                  Remove
+                </button>
+</div>
+<div class="wp-preview-img" id="wpPreviewImg"></div>
+</div>
+<!-- Sliders -->
+<div class="wp-sliders" id="wpSliders">
+<div class="setting-item">
+<label>Opacity <span class="range-value" id="opacityValue">100%</span></label>
+<input class="setting-range" id="wallpaperOpacity" max="100" min="5" type="range" value="100"/>
+</div>
+<div class="setting-item">
+<label>Blur <span class="range-value" id="blurValue">0px</span></label>
+<input class="setting-range" id="wallpaperBlur" max="30" min="0" type="range" value="0"/>
+</div>
+</div>
+</div>
+<div class="settings-section atmosphere-settings-section">
+<h3>Animated Atmosphere</h3>
+<div aria-label="Animated background effect" class="atmosphere-effect-grid" id="ambientEffectGrid" role="group">
+<button class="atmosphere-effect-option active" data-atmosphere-effect="none" type="button"><span class="atmosphere-effect-preview atmosphere-preview-none"></span><span>None</span></button>
+<button class="atmosphere-effect-option" data-atmosphere-effect="smoke" type="button"><span class="atmosphere-effect-preview atmosphere-preview-smoke"></span><span>Soft smoke</span></button>
+<button class="atmosphere-effect-option" data-atmosphere-effect="clouds" type="button"><span class="atmosphere-effect-preview atmosphere-preview-clouds"></span><span>Drifting clouds</span></button>
+<button class="atmosphere-effect-option" data-atmosphere-effect="rain" type="button"><span class="atmosphere-effect-preview atmosphere-preview-rain"></span><span>Rainfall</span></button>
+</div>
+</div>
+<div class="settings-section">
+<h3>Color Themes</h3>
+<div class="theme-grid" id="themeGrid">
+<div class="theme-card active" data-theme="midnight-pro">
+<div class="theme-preview" style="background: linear-gradient(135deg, #0a0e1a, #141824); border-color: #3b82f6;">
+<div class="theme-accent" style="background: #3b82f6;"></div>
+</div>
+<span>Midnight Pro</span>
+</div>
+<div class="theme-card" data-theme="royal-purple">
+<div class="theme-preview" style="background: linear-gradient(135deg, #0f0819, #1a1029); border-color: #a855f7;">
+<div class="theme-accent" style="background: #a855f7;"></div>
+</div>
+<span>Royal Purple</span>
+</div>
+<div class="theme-card" data-theme="ocean-depth">
+<div class="theme-preview" style="background: linear-gradient(135deg, #061520, #0d2030); border-color: #06b6d4;">
+<div class="theme-accent" style="background: #06b6d4;"></div>
+</div>
+<span>Ocean Depth</span>
+</div>
+<div class="theme-card" data-theme="emerald-luxe">
+<div class="theme-preview" style="background: linear-gradient(135deg, #061810, #0d2418); border-color: #10b981;">
+<div class="theme-accent" style="background: #10b981;"></div>
+</div>
+<span>Emerald Luxe</span>
+</div>
+<div class="theme-card" data-theme="sunset-copper">
+<div class="theme-preview" style="background: linear-gradient(135deg, #1a0f08, #251710); border-color: #f97316;">
+<div class="theme-accent" style="background: #f97316;"></div>
+</div>
+<span>Sunset Copper</span>
+</div>
+<div class="theme-card" data-theme="rose-noir">
+<div class="theme-preview" style="background: linear-gradient(135deg, #150a10, #20111a); border-color: #f43f5e;">
+<div class="theme-accent" style="background: #f43f5e;"></div>
+</div>
+<span>Rose Noir</span>
+</div>
+<div class="theme-card" data-theme="cyber-teal">
+<div class="theme-preview" style="background: linear-gradient(135deg, #061715, #0d221f); border-color: #14b8a6;">
+<div class="theme-accent" style="background: #14b8a6;"></div>
+</div>
+<span>Cyber Teal</span>
+</div>
+<div class="theme-card" data-theme="graphite-gold">
+<div class="theme-preview" style="background: linear-gradient(135deg, #0d0d0d, #171717); border-color: #eab308;">
+<div class="theme-accent" style="background: #eab308;"></div>
+</div>
+<span>Graphite Gold</span>
+</div>
+<div class="theme-card" data-theme="nordic-ice">
+<div class="theme-preview" style="background: linear-gradient(135deg, #0c1620, #16232f); border-color: #38bdf8;">
+<div class="theme-accent" style="background: #38bdf8;"></div>
+</div>
+<span>Nordic Ice</span>
+</div>
+<div class="theme-card" data-theme="crimson-elite">
+<div class="theme-preview" style="background: linear-gradient(135deg, #150808, #210f0f); border-color: #ef4444;">
+<div class="theme-accent" style="background: #ef4444;"></div>
+</div>
+<span>Crimson Elite</span>
+</div>
+<div class="theme-card" data-theme="aurora-glass">
+<div class="theme-preview" style="background: linear-gradient(135deg, #081b2c, #142441); border-color: #55e5cc;">
+<div class="theme-accent" style="background: #55e5cc;"></div>
+</div>
+<span>Aurora Glass</span>
+</div>
+<div class="theme-card" data-theme="lavender-dusk">
+<div class="theme-preview" style="background: linear-gradient(135deg, #171326, #28203e); border-color: #c4a5ff;">
+<div class="theme-accent" style="background: #c4a5ff;"></div>
+</div>
+<span>Lavender Dusk</span>
+</div>
+<div class="theme-card" data-theme="arctic-rose">
+<div class="theme-preview" style="background: linear-gradient(135deg, #101c2a, #283447); border-color: #ff9dc2;">
+<div class="theme-accent" style="background: #ff9dc2;"></div>
+</div>
+<span>Arctic Rose</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Backup & Sync Tab -->
+<div class="tab-pane" id="backup-syncTab">
+
+<!-- Google Sheets 2-Way Live Instant Sync -->
+<div class="settings-section cloud-backup-section">
+<div class="cloud-section-header">
+  <div class="cloud-title-group">
+    <span class="cloud-section-eyebrow">GOOGLE SHEETS 2-WAY LIVE SYNC</span>
+    <h3 style="margin-top:2px;">Cloud Backup &amp; Restore</h3>
+  </div>
+  <span id="booklyCloudSyncStatusDot" class="bookly-cloud-dot" title="Cloud Sync Idle"></span>
+</div>
+
+
+<div class="cloud-sync-card">
+  <div class="cloud-field">
+    <label for="booklyCloudUrlInput">Google Apps Script Web App URL</label>
+    <div class="cloud-input-group">
+      <input type="text" id="booklyCloudUrlInput" placeholder="https://script.google.com/macros/s/.../exec" spellcheck="false" autocomplete="off" />
+      <button type="button" class="btn-secondary" id="booklyCloudTestBtn">Connect &amp; Test</button>
+    </div>
+  </div>
+
+  <div id="booklyCloudStatusBox" class="cloud-status-box hidden"></div>
+
+  <div class="cloud-actions-row">
+    <button type="button" class="btn-primary backup-btn" id="booklyCloudBackupBtn">
+      <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="16"><path d="M12 17V3m0 0 4 4m-4-4-4 4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+      <span>Backup to Google Sheet</span>
+    </button>
+    <button type="button" class="btn-secondary backup-btn" id="booklyCloudRestoreBtn">
+      <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="16"><path d="M12 3v14m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+      <span>Restore from Google Sheet</span>
+    </button>
+  </div>
+
+  <div class="cloud-footer-options">
+    <label class="cloud-toggle-label">
+      <input type="checkbox" id="booklyAutoSyncToggle" checked />
+      <span>Auto-sync to Google Sheet on any link/folder change</span>
+    </label>
+    <a href="#" class="cloud-external-link" id="booklyOpenSheetBtn" target="_blank">Open Google Sheet &#8599;</a>
+  </div>
+
+  
+</div>
+</div>
+
+<div class="settings-section">
+<h3>Local File Backup &amp; Restore</h3>
+<p class="section-description">Full backup including all metadata (tags, notes, favorites, folder order).</p>
+<div class="backup-buttons-row">
+<button class="btn-primary backup-btn" id="exportBtn">
+<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16">
+<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+<polyline points="7 10 12 15 17 10"></polyline>
+<line x1="12" x2="12" y1="15" y2="3"></line>
+</svg>
+                Export Backup
+              </button>
+<label class="btn-secondary backup-btn file-upload-btn">
+<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16">
+<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+<polyline points="17 8 12 3 7 8"></polyline>
+<line x1="12" x2="12" y1="3" y2="15"></line>
+</svg>
+                Import Backup
+                <input accept=".json" hidden="" id="importFileSelect" type="file"/>
+</label>
+</div>
+</div>
+</div>
+</div>
+<div class="settings-footer">
+<div class="about-info">
+<span class="app-name">Bookly Pro</span>
+<span aria-hidden="true" class="about-separator">•</span>
+<a class="developer-link" href="https://facebook.com/moshclusive" rel="noopener noreferrer" target="_blank">Developed by Moshiur</a>
+</div>
+</div>
+</div>
+</div>
+<!-- Manage Apps Modal -->
+<div class="modal-overlay hidden" id="manageAppsModalOverlay">
+<div class="modal">
+<div class="modal-header">
+<h2>Manage Apps</h2>
+<button class="modal-close" id="closeManageAppsModal">×</button>
+</div>
+<div class="manage-apps-content">
+<div class="manage-apps-tabs" id="manageAppsTabs">
+<button class="manage-tab active" data-provider="google">Google</button>
+<button class="manage-tab" data-provider="microsoft">Microsoft</button>
+<button class="manage-tab" data-provider="meta">Meta</button>
+<button class="manage-tab" data-provider="custom">Custom</button>
+</div>
+<div class="manage-apps-list" id="manageAppsList"></div>
+<div class="manage-apps-actions">
+<button class="btn-primary" id="addCustomAppBtn">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+<line x1="12" x2="12" y1="5" y2="19"></line>
+<line x1="5" x2="19" y1="12" y2="12"></line>
+</svg>
+            Add Custom App
+          </button>
+<button class="btn-secondary" id="resetAppsBtn">Reset to Default</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Add Custom App Modal -->
+<div class="modal-overlay hidden" id="addAppModalOverlay">
+<div class="modal modal-small">
+<div class="modal-header">
+<h2 id="addAppModalTitle">Add Custom App</h2>
+<button class="modal-close" id="closeAddAppModal">×</button>
+</div>
+<form autocomplete="off" id="addAppForm">
+<input id="editAppProvider" type="hidden"/>
+<input id="editAppIndex" type="hidden"/>
+<div class="form-group">
+<label for="appName">App Name</label>
+<input id="appName" placeholder="e.g. Notion" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="appUrl">App URL</label>
+<input id="appUrl" placeholder="https://notion.so" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="appIcon">Custom Icon URL (optional)</label>
+<input id="appIcon" placeholder="Leave empty for auto-favicon" type="text"/>
+<small class="form-help">Uses site favicon if empty</small>
+</div>
+<div class="form-group">
+<label for="appProvider">Category</label>
+<select class="setting-select" id="appProvider">
+<option value="custom">Custom</option>
+<option value="google">Google</option>
+<option value="microsoft">Microsoft</option>
+<option value="meta">Meta</option>
+</select>
+</div>
+<div class="modal-actions">
+<button class="btn-secondary" id="cancelAddAppBtn" type="button">Cancel</button>
+<button class="btn-primary" type="submit">Save App</button>
+</div>
+</form>
+</div>
+</div>
+<!-- All Saved Bookmarks: categorized, searchable glassfrost popup -->
+<div aria-labelledby="savedBookmarksTitle" aria-modal="true" class="saved-bookmarks-overlay hidden" id="savedBookmarksOverlay" role="dialog">
+<div class="saved-bookmarks-backdrop" data-close-saved-bookmarks="true"></div>
+<section class="saved-bookmarks-window">
+<header class="saved-bookmarks-header">
+<div class="saved-bookmarks-title-block"><h2 id="savedBookmarksTitle">All Bookmark Items</h2></div>
+</header>
+<div class="saved-bookmarks-toolbar">
+<label class="saved-bookmarks-search"><svg fill="none" height="17" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="17"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg><input autocomplete="off" id="savedBookmarksSearch" placeholder="Search folders and bookmarks..." type="search"/></label>
+<div class="saved-bookmarks-actions saved-bookmarks-toolbar-actions">
+<button class="glass-action-btn" id="savedAddFolderBtn" type="button"><svg fill="none" height="15" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="15"><path d="M3 7a2 2 0 0 1 2-2h5l2 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><path d="M12 11v6M9 14h6"></path></svg>Folder</button>
+<button class="glass-action-btn primary" id="savedAddBookmarkBtn" type="button"><svg fill="none" height="15" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="15"><path d="M6 3.75A1.75 1.75 0 0 1 7.75 2h8.5A1.75 1.75 0 0 1 18 3.75V22l-6-3.8L6 22z"></path><path d="M12 7v6M9 10h6"></path></svg>Bookmark</button>
+<button aria-label="Close saved bookmarks" class="saved-bookmarks-close" id="closeSavedBookmarksBtn" title="Close" type="button">×</button>
+</div>
+</div>
+<div class="saved-bookmarks-browser">
+<aside aria-label="Bookmark folders" class="saved-bookmarks-sidebar">
+<button class="saved-folder-nav active" id="savedAllLinksNav" type="button">
+<span class="saved-folder-nav-icon saved-icon-all-links"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect></svg></span><span class="saved-folder-nav-label">All Links</span><span class="saved-folder-nav-count" id="savedAllLinksNavCount">0</span>
+</button>
+<button class="saved-folder-nav" id="savedFavoritesNav" type="button">
+<span class="saved-folder-nav-icon saved-icon-favorites"><svg width="15" height="15" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></span><span class="saved-folder-nav-label">Pinned &amp; Favorites</span><span class="saved-folder-nav-count" id="savedFavoritesNavCount">0</span>
+</button>
+<div class="saved-sidebar-section-title">FOLDERS</div>
+<div class="saved-bookmarks-folder-list" id="savedBookmarksFolderList"></div>
+</aside>
+<section aria-label="Selected bookmarks" class="saved-bookmarks-results">
+<header class="saved-results-header">
+<div class="saved-results-heading"><h3 id="savedSelectedFolderTitle">All Links</h3><p id="savedSelectedFolderSubtitle">All saved bookmarks across every folder</p></div>
+<span class="saved-selected-folder-count" id="savedSelectedFolderCount">0 links</span>
+</header>
+<div class="saved-bookmark-categories" id="savedBookmarkCategories"></div>
+</section>
+</div>
+</section>
+</div>
+<!-- Pinned and Favorite Bookmarks: legacy fallback surface -->
+<div aria-labelledby="favoriteBookmarksTitle" aria-modal="true" class="favorite-bookmarks-overlay hidden" id="favoriteBookmarksOverlay" role="dialog">
+<div class="favorite-bookmarks-backdrop" data-close-favorite-bookmarks="true"></div>
+<section class="favorite-bookmarks-window">
+<header class="favorite-bookmarks-header">
+<div class="favorite-bookmarks-heading">
+<span aria-hidden="true" class="favorite-bookmarks-symbol"><svg fill="none" height="22" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24" width="22"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9z"></path></svg></span>
+<div><h2 id="favoriteBookmarksTitle">Pinned &amp; Favorites</h2><p>Your bookmarked links, arranged like apps</p></div>
+</div>
+<button aria-label="Close favorites" class="favorite-bookmarks-close" id="closeFavoriteBookmarksBtn" title="Close" type="button">×</button>
+</header>
+<div class="favorite-bookmarks-toolbar">
+<label class="favorite-bookmarks-search"><svg fill="none" height="17" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="17"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg><input autocomplete="off" id="favoriteBookmarksSearch" placeholder="Search pinned and favorite bookmarks..." type="search"/></label>
+<span class="favorite-bookmarks-count" id="favoriteBookmarksCount">0 apps</span>
+</div>
+<div class="favorite-bookmark-apps-grid" id="favoriteBookmarkAppsGrid"></div>
+</section>
+</div>
+<button aria-label="Windows Shutdown Timer" class="floating-shutdown-timer shutdown-timer-trigger" id="shutdownTimerBtn" title="Windows Shutdown Timer">
+<svg aria-hidden="true" fill="none" height="21" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24" width="21"><circle cx="12" cy="13" r="8.5"></circle><path d="M12 8v5l3 2M9 2h6M12 2v2"></path><path d="M19 4l1.5 1.5"></path></svg>
+</button>
+<!-- Windows-level shutdown scheduling needs the optional native helper shipped in Shutdown Helper/. -->
+<div aria-labelledby="shutdownTimerTitle" aria-modal="true" class="bookly-tool-overlay hidden" id="shutdownTimerOverlay" role="dialog">
+<div class="bookly-tool-backdrop" data-close-shutdown-timer="true"></div>
+<section class="bookly-tool-dialog shutdown-timer-dialog">
+<header class="bookly-tool-dialog-header">
+<div><span class="bookly-tool-eyebrow">WINDOWS UTILITY</span><h2 id="shutdownTimerTitle">Shutdown Timer</h2></div>
+<button aria-label="Close shutdown timer" class="bookly-tool-close" id="closeShutdownTimerBtn" type="button">×</button>
+</header>
+<div class="shutdown-presets" id="shutdownPresets">
+<button data-minutes="20" type="button">20 min</button><button class="active" data-minutes="30" type="button">30 min</button><button data-minutes="50" type="button">50 min</button><button data-minutes="60" type="button">1 hour</button><button data-minutes="120" type="button">2 hours</button>
+</div>
+<label class="bookly-tool-field"><span>Custom countdown (minutes)</span><input id="shutdownMinutesInput" inputmode="numeric" max="1440" min="1" step="1" type="number" value="30"/></label>
+<div class="shutdown-timer-actions"><button class="shutdown-primary-btn" id="scheduleShutdownBtn" type="button">Schedule shutdown</button><button class="shutdown-cancel-btn" id="cancelShutdownBtn" type="button">Cancel scheduled shutdown</button></div>
+<p aria-live="polite" class="shutdown-status" id="shutdownTimerStatus" role="status"></p>
+<div class="shutdown-helper-note hidden" id="shutdownHelperSetupNote"><strong>Windows helper setup</strong><ol><li>Open <code>Shutdown Helper</code> in the extension folder.</li><li>Run <code>Install-BooklyShutdownHost.bat</code>.</li><li>Restart Chrome.</li></ol></div>
+</section>
+</div>
+
+<!-- Floating To Do list Button (Alt+T) -->
+<button aria-label="To Do list (Alt+T)" class="floating-daily-focus daily-focus-trigger" id="dailyFocusBtn" title="To Do list (Alt+T)">
+  <svg aria-hidden="true" fill="none" height="20" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="20">
+    <path d="M9 11l3 3L22 4"></path>
+    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+  </svg>
+  
+</button>
+
+<!-- To Do list Dialog (Movable Window) -->
+<div aria-labelledby="dailyFocusTitle" aria-modal="true" class="bookly-tool-overlay hidden" id="dailyFocusOverlay" role="dialog">
+  <div class="bookly-tool-backdrop" data-close-daily-focus="true"></div>
+  <section class="bookly-tool-dialog daily-focus-dialog" id="dailyFocusDialog">
+    <header class="bookly-tool-dialog-header" id="dailyFocusHeader" title="Click and drag to move anywhere">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="dialog-drag-handle" style="display:inline-flex;color:rgba(255,255,255,0.4);cursor:grab;" title="Drag to move"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg></span>
+        <h2 id="dailyFocusTitle" class="daily-focus-clean-title">To Do list</h2>
+      </div>
+      <div class="daily-focus-header-actions">
+        <button aria-label="Pin widget to dashboard" class="daily-tool-icon-btn" id="dailyPinWidgetBtn" title="Pin / Unpin on Homepage" type="button">
+          <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="16"><path d="M12 17v5M5 12h14M16 3H8l2 5h4z"></path></svg>
+        </button>
+        <button aria-label="Close daily focus" class="bookly-tool-close" id="closeDailyFocusBtn" type="button">×</button>
+      </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="daily-focus-progress-wrap">
+      <div class="daily-focus-progress-header">
+        <span class="daily-focus-status-text" id="dailyFocusStatusText">0 completed</span>
+        
+      </div>
+      <div class="daily-focus-progress-bar">
+        <div class="daily-focus-progress-fill" id="dailyFocusProgressFill" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <!-- Quick Add Input -->
+    <div class="daily-focus-add-row">
+      <input autocomplete="off" class="daily-focus-input" id="dailyTaskInput" placeholder="Add a task for today... (Press Enter)" type="text" maxlength="140" />
+      <button class="daily-focus-add-btn" id="dailyAddTaskBtn" type="button">+ Add</button>
+    </div>
+
+    <!-- Tasks List Container -->
+    <div class="daily-focus-list-wrap">
+      <ul class="daily-focus-task-list" id="dailyTaskList"></ul>
+      <div class="daily-focus-empty hidden" id="dailyFocusEmpty"></div>
+    </div>
+
+    <!-- Toolbar: Clear Done & Reset -->
+    <div class="daily-focus-toolbar">
+      <button class="daily-subtle-btn" id="dailyClearDoneBtn" type="button">Clear Completed</button>
+      <button class="daily-subtle-btn danger" id="dailyResetDayBtn" type="button">Reset All</button>
+    </div>
+
+    <!-- Quick Scratchpad / Notes Section -->
+    <div class="daily-notes-section">
+      <textarea class="daily-notes-textarea" id="dailyNotesText" placeholder="Write today's notes, study topics, or thoughts..." rows="4"></textarea>
+    </div>
+  </section>
+</div>
+
+
+
+
+<!-- Optional Pinned Daily Focus Card on Dashboard -->
+<aside class="daily-pinned-card hidden" id="dailyPinnedCard">
+  <div class="daily-pinned-header">
+    <div class="daily-pinned-title-row">
+      <span class="daily-pinned-title">To Do list</span>
+      <span class="daily-pinned-count" id="dailyPinnedCount">0/3</span>
+    </div>
+    <div class="daily-pinned-actions">
+      <button aria-label="Open Full Focus Panel" class="daily-pinned-btn" id="dailyPinnedExpandBtn" title="Open Full Panel (Alt+T)" type="button">
+        <svg fill="none" height="13" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="13"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg>
+      </button>
+      <button aria-label="Unpin from dashboard" class="daily-pinned-btn" id="dailyPinnedCloseBtn" title="Unpin" type="button">×</button>
+    </div>
+  </div>
+  <div class="daily-pinned-progress-bar">
+    <div class="daily-pinned-progress-fill" id="dailyPinnedProgressFill" style="width: 0%;"></div>
+  </div>
+  <ul class="daily-pinned-list" id="dailyPinnedList">
+    <li class="daily-task-item" data-id="t1">
+      <button class="daily-task-checkbox" type="button"><svg fill="none" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg></button>
+      <span class="daily-task-text">Design 5–10 vectors for microstock</span>
+      <button class="daily-task-delete" type="button"><svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="12"><path d="M18 6L6 18M6 6l12 12"></path></svg></button>
+    </li>
+    <li class="daily-task-item" data-id="t2">
+      <button class="daily-task-checkbox" type="button"><svg fill="none" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg></button>
+      <span class="daily-task-text">Deliver active client orders on Fiverr</span>
+      <button class="daily-task-delete" type="button"><svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="12"><path d="M18 6L6 18M6 6l12 12"></path></svg></button>
+    </li>
+    <li class="daily-task-item" data-id="t3">
+      <button class="daily-task-checkbox" type="button"><svg fill="none" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg></button>
+      <span class="daily-task-text">Study 2 hours for exam preparation</span>
+      <button class="daily-task-delete" type="button"><svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="12"><path d="M18 6L6 18M6 6l12 12"></path></svg></button>
+    </li>
+  </ul>
+  <div class="daily-pinned-quick-add">
+    <input autocomplete="off" class="daily-pinned-input" id="dailyPinnedInput" placeholder="+ Add today's task..." type="text" maxlength="140" />
+  </div>
+</aside>
+
+<script src="quotes.js"></script>
+<script src="popup.js"></script>
+<!-- Keyboard Navigation Hint -->
+<div class="kb-nav-hint" id="kbNavHint">
+<span><kbd>j</kbd>/<kbd>↓</kbd> Down</span>
+<span><kbd>k</kbd>/<kbd>↑</kbd> Up</span>
+<span><kbd>h</kbd>/<kbd>←</kbd> Back</span>
+<span><kbd>l</kbd>/<kbd>→</kbd> Open</span>
+<span><kbd>Enter</kbd> Open</span>
+<span><kbd>Esc</kbd> Exit</span>
+</div>
+</body>
+</html>

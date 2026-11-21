@@ -1,0 +1,228 @@
+{
+ "demo_data": true,
+ "exportDate": "2026-11-21T00:00:00.000Z",
+ "version": "4.0",
+ "theme": "cyber-teal",
+ "showFavoritesOnly": false,
+ "folderOrder": [
+  "AI",
+  "Microstock Sites",
+  "Search Engines",
+  "Stock Images",
+  "Design Inspiration"
+ ],
+ "favoriteFolders": {
+  "AI": "#2196f3",
+  "Microstock Sites": "#4caf50"
+ },
+ "folderIcons": {},
+ "pinnedFolders": [],
+ "customLinkOrder": {},
+ "allLinksCustomOrder": [],
+ "links": {
+  "AI": [
+   {
+    "dateAdded": "2026-11-21T00:00:00.000Z",
+    "favorite": false,
+    "id": "dd3da0bf-862b-4915-8b13-3cba0af84607",
+    "link": "https://chatgpt.com/",
+    "order": 10,
+    "pinned": false,
+    "tags": [
+     "ai chat",
+     "chatgpt"
+    ],
+    "title": "ChatGPT",
+    "usage": 0
+   },
+   {
+    "dateAdded": "2026-11-21T00:00:00.000Z",
+    "favorite": false,
+    "id": "017abeea-22f4-47cb-ada1-dc2fbca28351",
+    "link": "https://gemini.google.com/",
+    "order": 20,
+    "pinned": false,
+    "tags": [
+     "ai chat",
+     "gemini"
+    ],
+    "title": "Gemini",
+    "usage": 0
+   },
+   {
+    "dateAdded": "2026-11-21T00:00:00.000Z",
+    "favorite": false,
+    "id": "0b809c1c-1a3a-42db-921b-daa1975838bb",
+    "link": "https://chat.deepseek.com/",
+    "order": 30,
+    "pinned": false,
+    "tags": [
+     "ai chat",
+     "deepseek"
+    ],
+    "title": "DeepSeek",
+    "usage": 0
+   }
+  ],
+  "Microstock Sites": [
+   {
+    "dateAdded": "2026-11-21T00:00:00.000Z",
+    "favorite": false,
+    "id": "02d57822-3955-4745-bd59-23f6627ed1f3",
+    "link": "https://stock.adobe.com/",
+    "order": 10,
+    "pinned": false,
+    "tags": [
+     "stock",
+     "adobe"
+    ],
+    "title": "Adobe Stock",
+    "usage": 0
+   },
+   {
+    "dateAdded": "2026-11-21T00:00:00.000Z",
+    "favorite": false,
+    "id": "b44b4891-3516-49b9-a313-759b99369aa1",
+    "link": "https://www.freepik.com/",
+    "order": 20,
+    "pinned": false,
+    "tags": [
+     "stock",
+     "freepik"
+    ],
+    "title": "Freepik",
+    "usage": 0
+   },
+   {
+    "dateAdded": "2026-11-21T00:00:00.000Z",
+    "favorite": false,
+    "id": "62b27d43-a106-49fc-90f6-e49f0f82f27e",
+    "link": "https://www.shutterstock.com/",
+    "order": 30,
+    "pinned": false,
+    "tags": [
+     "stock",
+     "shutterstock"
+    ],
+    "title": "Shutterstock",
+    "usage": 0
+   }
+  ],
+  "Search Engines": [
+   {
+    "dateAdded": "2026-11-21T00:00:00.000Z",
+    "favorite": false,
+    "id": "e388bd49-35a5-4ddf-b7a7-e7a5fa8eed86",
+    "link": "https://duckduckgo.com/",
+    "order": 10,
+    "pinned": false,
+    "tags": [
+     "search"
+    ],
+    "title": "DuckDuckGo",
+    "usage": 0
+   },
+   {
+    "dateAdded": "2026-11-21T00:00:00.000Z",
+    "favorite": false,
+    "id": "f4fee98e-1ace-4fde-9952-f4651b197421",
+    "link": "https://www.google.com/",
+    "order": 20,
+    "pinned": false,
+    "tags": [
+     "search"
+    ],
+    "title": "Google",
+    "usage": 0
+   }
+  ],
+  "Stock Images": [
+   {
+    "dateAdded": "2026-11-21T00:00:00.000Z",
+    "favorite": false,
+    "id": "bbd9e135-28dd-4109-8463-65506591a733",
+    "link": "https://unsplash.com/",
+    "order": 10,
+    "pinned": false,
+    "tags": [
+     "images",
+     "free"
+    ],
+    "title": "Unsplash",
+    "usage": 0
+   },
+   {
+    "dateAdded": "2026-11-21T00:00:00.000Z",
+    "favorite": false,
+    "id": "c97a4d12-3423-4ffc-8825-7c2d62ce1d84",
+    "link": "https://www.pexels.com/",
+    "order": 20,
+    "pinned": false,
+    "tags": [
+     "images",
+     "free"
+    ],
+    "title": "Pexels",
+    "usage": 0
+   },
+   {
+    "dateAdded": "2026-11-21T00:00:00.000Z",
+    "favorite": false,
+    "id": "0a419455-7c24-4aa2-aad6-42b9b866cc88",
+    "link": "https://pixabay.com/",
+    "order": 30,
+    "pinned": false,
+    "tags": [
+     "images",
+     "free"
+    ],
+    "title": "Pixabay",
+    "usage": 0
+   }
+  ],
+  "Design Inspiration": [
+   {
+    "dateAdded": "2026-11-21T00:00:00.000Z",
+    "favorite": false,
+    "id": "5f59ff2e-f2ed-4324-8cf5-5b5b37e5eae9",
+    "link": "https://www.behance.net/",
+    "order": 10,
+    "pinned": false,
+    "tags": [
+     "design",
+     "inspiration"
+    ],
+    "title": "Behance",
+    "usage": 0
+   },
+   {
+    "dateAdded": "2026-11-21T00:00:00.000Z",
+    "favorite": false,
+    "id": "02373bf9-4331-4908-a4c2-4d3eae16bf9e",
+    "link": "https://www.pinterest.com/",
+    "order": 20,
+    "pinned": false,
+    "tags": [
+     "design",
+     "inspiration"
+    ],
+    "title": "Pinterest",
+    "usage": 0
+   }
+  ]
+ },
+ "quickAccess": [
+  {
+   "id": "cbba239d-41ae-413d-819c-097fa603a95f",
+   "link": "https://stock.adobe.com/",
+   "serial": 1,
+   "title": "Adobe Stock"
+  },
+  {
+   "id": "5e55a4ee-e5ba-4373-ad5d-221b97bd3d8b",
+   "link": "https://www.freepik.com/",
+   "serial": 2,
+   "title": "Freepik"
+  }
+ ]
+}

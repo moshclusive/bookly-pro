@@ -1,0 +1,88 @@
+{
+  "action": {
+    "default_icon": {
+      "128": "Assets/icon128.png",
+      "16": "Assets/icon16.png",
+      "48": "Assets/icon48.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "chrome_url_overrides": {
+    "newtab": "popup.html"
+  },
+  "commands": {
+    "add-bookmark": {
+      "description": "Add Bookmark",
+      "suggested_key": {
+        "default": "Ctrl+B",
+        "mac": "Command+B"
+      }
+    },
+    "replace-current-tab": {
+      "description": "Close this tab and open a fresh Bookly New Tab",
+      "suggested_key": {
+        "default": "Ctrl+Shift+Y"
+      }
+    },
+    "search-bookmarks": {
+      "description": "Search Bookmarks",
+      "suggested_key": {
+        "default": "Ctrl+F",
+        "mac": "Command+F"
+      }
+    }
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "redirect.js"
+      ],
+      "matches": [
+        "*://www.facebook.com/*"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "description": "Bookly Pro New Tab with a reliable shared web/bookmark search field and compact glass controls.",
+  "host_permissions": [
+    "*://www.facebook.com/*",
+    "https://suggestqueries.google.com/*",
+    "https://news.google.com/*",
+    "https://site.api.espn.com/*",
+    "https://chatgpt.com/*",
+    "https://gemini.google.com/*",
+    "https://script.google.com/*",
+    "https://script.googleusercontent.com/*"
+  ],
+  "icons": {
+    "128": "Assets/icon128.png",
+    "16": "Assets/icon16.png",
+    "48": "Assets/icon48.png"
+  },
+  "manifest_version": 3,
+  "name": "Bookly Pro",
+  "permissions": [
+    "storage",
+    "tabs",
+    "windows",
+    "downloads",
+    "contextMenus",
+    "bookmarks",
+    "nativeMessaging",
+    "scripting",
+    "notifications"
+  ],
+  "version": "4.0.25",
+  "web_accessible_resources": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "resources": [
+        "quotes.txt"
+      ]
+    }
+  ]
+}
