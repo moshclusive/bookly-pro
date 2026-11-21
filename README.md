@@ -1,5 +1,7 @@
 # Bookly Pro - New Tab Dashboard & Bookmark Manager
 
+<p align="center"><img src="Assets/icon128.png" alt="bookly-pro logo" width="128"></p>
+
 > A Chrome extension (Manifest V3, v4.0.25) that replaces the New Tab page with a productivity dashboard: a folder-based bookmark manager, live clock and quotes, wallpaper, multi-engine search, news, sports, weather, and an optional Google Sheets backup.
 
 ## ✨ Features
